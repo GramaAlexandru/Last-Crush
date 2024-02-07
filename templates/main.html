@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Dragging papers</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap'>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zeyada&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Dancing Script');
+
+
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  background-color: #ffffff;
+}
+
+.paper {
+  background-image: url("https://t4.ftcdn.net/jpg/05/34/87/15/360_F_534871551_MOmx3mu3oP1TkmUW8ZDffLpHrv86LLrE.jpg");
+  background-size: 500px;
+  background-position: center center;
+  padding: 20px 100px;
+/*  min-width: 800px; */
+  
+  transform: rotateZ(-10deg);
+  box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
+  
+  position: absolute;
+}
+
+.paper.heart {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.paper.image {
+  padding: 10px;
+}
+.paper.image p {
+  font-size: 50px;
+}
+
+img {
+  max-height: 400px;
+  width: 100%;
+  user-select: none;
+}
+
+.paper.heart::after {
+  content: "";
+  background-image: url('images/heart.gif');
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: 300px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+}
+
+p {
+  font-family: 'Dancing Script','Protest Riot', 'Helvetica', sans-serif;
+  font-size: 60px;
+  color: rgb(0,0,100);
+  opacity: 0.8;
+  user-select: none;
+ 
+  text-shadow: 2px 1.5px 1px rgba(0,0,105,0.9);
+ }
+
+ d {
+  font-family: 'Dancing Script','Protest Riot', 'Helvetica', sans-serif;
+  font-size: 70px;
+  color: rgb(0,0,100);
+  opacity: 0.8;
+  user-select: none;
+
+  text-shadow: 2px 1.5px 1px rgba(0,0,105,0.9);
+ }
+
+
+</style>
+
+</head>
+<body>
+  <d><a href="/întrebare">Apasă aici!👈 🫣</a></d>
+
+  
+<div class="paper ">
+  <p> la această întrebare </p>
+</div>
+<div class="paper "><p> să răspunzi... </p></div> 
+
+<div class="paper"><p> acum am sa te rog...
+
+</p></div> 
+
+<div class="paper" d="paper5">
+  <p class="p1"> cu toate că a fost</p>
+  <p class="p2"> puțin ciudat 😂 ... </p>
+  </div>
+
+<div class="paper" d="paper5">
+  <p class="p1">să ies la întâlnire cu tine 👀 ...</p>
+  </div>
+
+<div class="paper" d="paper4">
+  <p> și mi-a plăcut foarte mult ... </p>
+</div>
+
+
+
+<div class="paper red" d="paper3">
+<p class="p1"> Că ești o persoană</p>
+<p class="p2">minunată 😊 ...</p>
+</div>
+
+<div class="paper" id="paper2">
+<p class="p1">Vreau să știi ... </p>
+</div>
+
+<div class="paper" id="paper1" >
+<p class="p1">Bună Ina !...<br>( trage de hârtie )</p>
+
+</div>
+  <script>
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const rotationAngles = [-10, 20, -5, 15]; 
+    const papers = document.querySelectorAll('.paper');
+    papers.forEach((paper, index) => {
+        const randomAngle = rotationAngles[index % rotationAngles.length];
+        paper.style.transform = `rotateZ(${randomAngle}deg)`;
+    });
+});
+
+
+let highestZ = 1;
+
+class Paper {
+  holdingPaper = false;
+  mouseTouchX = 0;
+  mouseTouchY = 0;
+  mouseX = 0;
+  mouseY = 0;
+  prevMouseX = 0;
+  prevMouseY = 0;
+  velX = 0;
+  velY = 0;
+  rotation = Math.random() * 35 - 15;
+  currentPaperX = 0;
+  currentPaperY = 0;
+  rotating = false;
+
+  init(paper) {
+    document.addEventListener('mousemove', (e) => {
+      if(!this.rotating) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        
+        this.velX = this.mouseX - this.prevMouseX;
+        this.velY = this.mouseY - this.prevMouseY;
+      }
+        
+      const dirX = e.clientX - this.mouseTouchX;
+      const dirY = e.clientY - this.mouseTouchY;
+      const dirLength = Math.sqrt(dirX*dirX+dirY*dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
+
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 280 * angle / Math.PI;
+      degrees = (460 + Math.round(degrees)) % 360;
+      if(this.rotating) {
+        this.rotation = degrees;
+      }
+
+      if(this.holdingPaper) {
+        if(!this.rotating) {
+          this.currentPaperX += this.velX;
+          this.currentPaperY += this.velY;
+        }
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
+
+        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
+      }
+    })
+
+    paper.addEventListener('mousedown', (e) => {
+      if(this.holdingPaper) return; 
+      this.holdingPaper = true;
+      
+      paper.style.zIndex = highestZ;
+      highestZ += 1;
+      
+      if(e.button === 0) {
+        this.mouseTouchX = this.mouseX;
+        this.mouseTouchY = this.mouseY;
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
+      }
+      if(e.button === 2) {
+        this.rotating = true;
+      }
+    });
+    window.addEventListener('mouseup', () => {
+      this.holdingPaper = false;
+      this.rotating = false;
+    });
+  }
+}
+
+const papers = Array.from(document.querySelectorAll('.paper'));
+
+papers.forEach(paper => {
+  const p = new Paper();
+  p.init(paper);
+});
+</script>
+
+</body>
+</html>

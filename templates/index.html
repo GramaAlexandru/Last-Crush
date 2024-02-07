@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ce ai facut alaltăieri ?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: 'Protest Riot', 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column; 
+        }
+
+        .gif-container {
+            position: relative;
+            max-width: 100%; 
+        }
+
+        .gif-container img {
+            width: 100%;
+            max-width: 100%; 
+            height: auto;
+        }
+
+        .buttons-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 75px;
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-yes {
+            background-color: #4CAF50;
+        }
+
+        .button-no {
+            background-color: #e74c3c;
+        }
+
+        .button:hover {
+            opacity: 0.8;
+            background-color: #333; 
+        }
+
+        .button-yes.button-grow {
+        transform: scale(1.2); /* Adjust the scale factor as needed */
+        }
+
+        .gif-object {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            animation: moveDown 2s linear forwards; 
+        }
+
+        @keyframes moveDown {
+            from {
+                transform: translateY(-50px); /* Start above the screen */
+            }
+            to {
+                transform: translateY(110vh); /* Move to the bottom of the screen */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Vrei să fii Valentinul meu?</h1>
+    
+    <div class="gif-container">
+        <img src="https://media.tenor.com/KM1VySAHeToAAAAi/cheriuzzina.gif" alt="no Gif">
+
+        <div class="buttons-container">
+            <button class="button button-yes" onclick="handleYesClick()">Da</button>
+            <button class="button button-no" onclick="handleNoClick()">Nu</button>
+        </div>
+    </div>
+
+    <script>
+    const textList = [
+    'Nu',
+    'Ești sigură?',
+    'Foarte sigură ?',
+    'Mai gândește-te',
+    'Ultima șansă',
+    'Sigur nu ?',
+    'S-ar putea să regreți asta',
+    'Ești absolut sigură?',
+    'Ar putea fi o greșeală',
+    'Ai inimă',
+    'Nu fi atât de rece',
+    'Nu te-ai răzgândit?',
+    'Acesta este răspunsul tău final?',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+    'Îmi frângi inima :C',
+];
+    let currentIndex = 0;
+    let sizeIncrement = 1;
+    let fontSizeIncrement = 1;
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttonNo = document.querySelector('.button-no');
+        buttonNo.textContent = textList[currentIndex];
+        currentIndex = (currentIndex + 1) % textList.length;
+    });
+
+    const gifUrls = [
+            'https://media.tenor.com/npdAdDGrVo8AAAAi/bubududu-panda.gif',
+            'https://media.tenor.com/QOzMqPvW8PUAAAAi/love-you.gif',
+            'https://media.tenor.com/r7PKNiF--nUAAAAi/mochi-cry.gif',
+            'https://media.tenor.com/N9LQmbTKy50AAAAi/mochi-cute.gif',
+            'https://media.tenor.com/LkEM1izXj5IAAAAi/pau-no-cu-brokenhearted.gif',
+            'https://media.tenor.com/cG5-wSuBxCsAAAAi/peach-cat.gif',
+            'https://media.tenor.com/YoAqt_jAr-UAAAAi/sad-broken-heart.gif',
+            'https://media.tenor.com/M-QvNmgt4t0AAAAi/sad-heartbroken.gif',
+            'https://media.tenor.com/fYlDBJAaG3AAAAAi/tkthao219-bubududu.gif',
+            'https://media.tenor.com/CBuAjhC_MSEAAAAi/tkthao219-bubududu.gif',     
+        ];
+
+        function getRandomUrl() {
+            const randomIndex = Math.floor(Math.random() * gifUrls.length);
+            return gifUrls[randomIndex];
+        }
+
+        function handleNoClick() {
+            createGifObject();
+            makeBigger();
+            changeNoButtonText();
+            let clickCount2 = localStorage.getItem('clickCount2') || 0;
+            clickCount2 = parseInt(clickCount2, 10) + 1;
+            localStorage.setItem('clickCount2', clickCount2);
+            updateTextVariable2(); 
+        }
+
+        function handleYesClick() {
+            window.location.href = '/da';
+            let clickCount = localStorage.getItem('clickCount') || 0;
+            clickCount = parseInt(clickCount, 10) + 1;
+            localStorage.setItem('clickCount', clickCount);
+        }
+
+        
+
+        function createGifObject() {
+            const gifObject = document.createElement('img');
+            gifObject.src = getRandomUrl(); 
+            gifObject.className = 'gif-object';
+
+            const randomPositionX = Math.random() * (window.innerWidth - 100);
+            gifObject.style.left = `${randomPositionX}px`;
+            gifObject.style.top = `-50px`; 
+
+            document.body.appendChild(gifObject);
+        }
+
+        function makeBigger() {
+        const button1 = document.querySelector('.button-yes');
+        sizeIncrement += 35;
+        fontSizeIncrement += 10;
+        button1.style.width = `${150 + sizeIncrement}px`;
+        button1.style.height = `${40 + sizeIncrement}px`;
+        button1.style.fontSize = `${18 + fontSizeIncrement}px`;
+    }
+
+    function changeNoButtonText() {
+        const buttonNo = document.querySelector('.button-no');
+        buttonNo.textContent = textList[currentIndex];
+        currentIndex = (currentIndex + 1) % textList.length;
+    }
+
+    </script>
+    
+</body>
+</html>
